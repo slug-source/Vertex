@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../Models/user.model.js";
 import jwt from "jsonwebtoken";
-
+import AppError from "../utils/AppError.js"
 const secret = process.env.JWT_SECRET;
 
 export async function login(email, password) {
@@ -27,14 +27,14 @@ export async function login(email, password) {
         secret,
         { expiresIn: "7d" }
     );
-    return token;
+    return {token, role: user.role};
 }
 
 
 export async function signup(name, email, password, role) {
     const user = await User.findOne({ email })
     if (user) {
-        throw new Error("User already exists");
+        throw new AppError("User already exists",400);
     }
 
     const hash = await bcrypt.hash(password, 10);
@@ -52,7 +52,6 @@ export async function signup(name, email, password, role) {
         secret,
         { expiresIn: "5m" }
     );
-    console.log(token)
-    return token;
+    return {token, role: user.role};
 
 }

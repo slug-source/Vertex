@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from './config/db.js';
 import userRoutes from './Routes/user.routes.js';
 import problemRoutes from './Routes/problem.routes.js';
+import submissionRoutes from './Routes/submission.routes.js';
 
 const app = express();
 connectDB();
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/user', userRoutes);
 app.use('/api/problem', problemRoutes);
+app.use('/api/submission', submissionRoutes);
 
 app.get('/', (_, res) => {
   console.log("Server is Alive");
@@ -30,7 +32,7 @@ app.get('/', (_, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log("error")
+  console.log(err.message)
   res.status(err.statusCode || 500).json({
     success: false,
     message: err.message

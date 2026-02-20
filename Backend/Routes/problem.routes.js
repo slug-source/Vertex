@@ -1,10 +1,13 @@
 import { Router } from "express";
 import { auth } from "../middlewares/auth.middleware.js"
-import { getProblems, getProblemById, createProblem, deleteProblem } from "../Controllers/problem.controller.js";
+import { getProblems, getProblemById, createProblem, deleteProblem, runProblem,submitProblem, codeReview} from "../Controllers/problem.controller.js";
+import { createSubmission } from "../Controllers/submission.controller.js";
 
 const router = Router();
 
-//router.post('/:id/run', auth(['user']), runProblem);
+router.post('/run', auth(['user']), runProblem);
+router.post('/:id/submit', auth(['user']), submitProblem, createSubmission);
+router.post('/review', auth(['user']), codeReview);
 
 
 router.post('/', auth(['creator']), createProblem);

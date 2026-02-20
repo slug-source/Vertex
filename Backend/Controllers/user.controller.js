@@ -3,10 +3,10 @@ import * as service from '../Services/user.service.js'
 export async function login(req, res, next) {
     const { email, password } = req.validatedData;
     try {
-        const token = await service.login(email, password);
+        const result = await service.login(email, password);
         return res.status(200).json({
             success: true,
-            token
+            result
         });
     }
     catch (error) {
@@ -18,10 +18,10 @@ export async function login(req, res, next) {
 export async function signup(req, res, next) {
     const { name, email, password, role } = req.validatedData;
     try {
-        const token = await service.signup(name, email, password, role);
+        const result = await service.signup(name, email, password, role);
         return res.status(200).json({
             success: true,
-            token
+            result
         });
     }
     catch (error) {

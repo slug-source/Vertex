@@ -2,13 +2,26 @@ import * as service from '../Services/problem.service.js';
 
 //user
 export async function runProblem(req, res, next){
-
     try {
-        const token = await service.runProblem(req.body.code, req.body.input);
+        const {code, input, language} = req.body;
+        const result = await service.runProblem(code, input, language);
         return res.status(200).json({
             success: true,
-            token
+            result
         });
+    }
+    catch (error) {
+        next(error);
+    }
+}
+
+export async function submitProblem(req, res, next){
+    try {
+        const {code, language} = req.body;
+        const { id } = req.params;
+        const result = await service.submitProblem(code, id, language);
+        req.result = {success: true, result};
+        next();
     }
     catch (error) {
         next(error);
@@ -34,10 +47,12 @@ export async function getProblemById(req, res, next){
 export async function getProblems(req, res, next){
 
     try {
+        const role = req.user.role;
         const result = await service.getProblems(req.user);
         return res.status(200).json({
             success: true,
-            result
+            result,
+            role
         });
     }
     catch (error) {
@@ -51,8 +66,10 @@ export async function getProblems(req, res, next){
 export async function createProblem(req, res, next){
 
     try {
-        let problem = {title,problemstatement,constraints,author,visiblecases,hiddencases}
-        const result = await service.createProblem(problem);
+        const {title,problemstatement,constraints,visiblecases,hiddencases} = req.body
+        let visibleCasesArray = JSON.parse(visiblecases);
+        let hiddenCasesArray = JSON.parse(hiddencases);
+        const result = await service.createProblem(title,problemstatement,constraints,req.user.id,visibleCasesArray,hiddenCasesArray);
         return res.status(200).json({
             success: true,
             result
@@ -65,7 +82,9 @@ export async function createProblem(req, res, next){
 export async function deleteProblem(req, res, next){
 
    try {
-        const result = await service.getProblemById(req.body.problemid, req.user);
+        const {id} = req.params;
+        const result = await service.deleteProblem(id, req.user);
+        console.log(result)
         return res.status(200).json({
             success: true,
             result
@@ -76,3 +95,16 @@ export async function deleteProblem(req, res, next){
     }
 }
 
+export async function codeReview(req, res, next){
+    try {
+        const {code, input} = req.body;
+        const result = await codeReview(code, input);
+        return res.status(200).json({
+            success: true,
+            result
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+}
