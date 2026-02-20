@@ -6,6 +6,7 @@ import Signup from './pages/Signup';
 import Problem from './pages/Problem';
 import ProtectedRoute from './components/ProtectedRoute';
 import CreateProblem from './pages/CreateProblem';
+import SolveProblem from './pages/SolveProblem';
 function App() {
 
   return (
@@ -19,7 +20,8 @@ function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route path='/home' element={<Home />} />
-            <Route path='/problem/:id' element={<Problem />} />
+            <Route path='/solve/:id' element={<SolveProblem />} />
+            <Route path='/view/:id' element={<Problem />} />
             <Route path='problem/create' element={<CreateProblem />} />
           </Route>
         </Routes>

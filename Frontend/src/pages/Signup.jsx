@@ -1,7 +1,8 @@
 import { useState } from "react";
 import api from "../utils/axios";
 
-export default function Signup() {
+
+const Signup = () => {
     const [role, setRole] = useState("user");
     const [form, setForm] = useState({
         name: "",
@@ -43,13 +44,12 @@ export default function Signup() {
         const payload = { name, email, password, role };
 
         try {
-            const { token } = await api.post("/user/signup", payload);
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
-            console.log("Signup successful:", data);
+            const result = await api.post("/user/signup", payload);
+            localStorage.setItem("token", result.token);
+            localStorage.setItem("user", result.role);
+            navigate("/home");
         } catch (err) {
-            console.log(err)
-            setError("Network error, please try again");
+            setError(err.response?.data?.message || "Network error, please try again");
         } finally {
             setLoading(false);
         }
@@ -61,7 +61,6 @@ export default function Signup() {
                 onSubmit={handleSubmit}
                 className="bg-zinc-900 p-8 rounded-xl w-full max-w-md space-y-6"
             >
-                {/* Role Toggle */}
                 <div className="flex bg-black rounded-lg overflow-hidden border border-zinc-700">
                     <button
                         type="button"
@@ -133,3 +132,6 @@ export default function Signup() {
         </div>
     );
 }
+
+
+export default Signup;

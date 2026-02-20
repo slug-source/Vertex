@@ -1,6 +1,9 @@
 #Backend
 Backend/node_modules
 Backend/.env
+Backend/utils/outputs/
+Backend/utils/inputs/
+Backend/utils/codes/
 
 #Frontend
 Frontend/.env

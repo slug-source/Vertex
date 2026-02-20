@@ -5,6 +5,7 @@ import api from "../utils/axios"
 
 const Problem = () => {
     const { id } = useParams();
+    const role = localStorage.getItem("user")
     const [problem, setProblem] = useState([]);
     const [error, setError] = useState("");
 
@@ -16,56 +17,91 @@ const Problem = () => {
             try {
                 const res = await api.get(`/problem/${id}`);
                 setProblem(res.data.result);
+                console.log(problem)
             } catch (err) {
                 console.log(err)
                 setError(err.response?.data?.message || "Error fetching problems");
+                navigate('/home');
             }
         }; getProblemById()
     }, []);
 
+    const handleDelete = async () => {
+        if (!window.confirm("Are you sure you want to delete this problem?")) return;
+
+        try {
+            const res = await api.delete(`/problem/${id}`);
+            console.log(res)
+            alert("Problem deleted successfully!");
+            navigate('/home');
+        } catch (err) {
+            console.error(err.response?.data?.message || err.message);
+            alert("Failed to delete problem");
+        }
+    };
+
     return (
         <>
             <Navbar />
-            <div className="p-6 space-y-4 bg-black">
-                <h1 className="text-2xl font-bold text-white">{problem.title}</h1>
-
+            <div className="p-6 space-y-4 bg-black min-h-screen flex flex-col text-white">
                 {error && <p className="text-red-400">{error}</p>}
 
-                <div className="space-y-2">
+                {role === "creator" && (<div className="space-y-2">
 
-                    <h2>Problem Statement</h2>
-                    <p>{problem.problemStatement}</p>
+                    <div className="p-6 overflow-y-auto">
+                        <h1 className="text-2xl font-bold mb-4">{problem.title}</h1>
+                        <p className="whitespace-pre-line mb-4">{problem.problemstatement}</p>
+                        {problem?.constraints && (<><h3 className="font-semibold mt-4">Constraints</h3>
+                        <p className="whitespace-pre-line">{problem.constraints}</p></>)
+                        }
+                        {problem?.visiblecases && (<div>
+                        <h3 className="font-semibold mt-4">Visible Test Cases</h3>
+                            {problem.visiblecases?.map((tc, index) => (
+                                <div key={tc._id} className="border m-5 p-5">
+                                    <h4>Testcase {index + 1}</h4>
 
-                    <h2>Constraints</h2>
-                    <p>{problem.constraints}</p>
+                                    <div>
+                                        <strong>Input:</strong>
+                                        <pre>{tc.input}</pre>
+                                    </div>
 
-                    {problem.visiblecases && problem.visiblecases.length > 0 && (
-                        <div>
-                            <h2> Sample Testcases</h2>
-                            {problem.visiblecases.map((tc, i) => (
-                                <div key={i}>
-                                    <b>Input:</b> {tc.input}
-                                    <br />
-                                    <b>Output:</b> {tc.output}
+                                    <div>
+                                        <strong>Output:</strong>
+                                        <pre>{tc.output}</pre>
+                                    </div>
                                 </div>
                             ))}
                         </div>
-                    )}
+                        )}
+                        {problem?.hiddencases && (<div>
+                        <h3 className="font-semibold mt-4">Visible Test Cases</h3>
+                            {problem.hiddencases?.map((tc, index) => (
+                                <div key={tc._id} className="border m-5 p-5">
+                                    <h4>Testcase {index + 1}</h4>
 
-                    {problem.hiddencases && problem.hiddencases.length > 0 && (
-                        <div>
-                            <h2>Hidden Testcases</h2>
-                            {problem.hiddencases.map((tc, i) => (
-                                <div key={i}>
-                                    <b>Input:</b> {tc.input}
-                                    <br />
-                                    <b>Output:</b> {tc.output}
+                                    <div>
+                                        <strong>Input:</strong>
+                                        <pre>{tc.input}</pre>
+                                    </div>
+
+                                    <div>
+                                        <strong>Output:</strong>
+                                        <pre>{tc.output}</pre>
+                                    </div>
                                 </div>
                             ))}
-                        </div>
-                    )
-                    }
-                </div>
+                        </div>)}
+                    </div>
+                </div>)}
+                {problem && (
+                <div className="flex justify-center">
+                    <button
+                        onClick={() => handleDelete(problem._id)}
+                        className="px-3 py-1 bg-red-600 rounded hover:bg-red-500 text-white"
+                    >
+                        Delete
+                    </button>
+                </div>)}
             </div >
         </>
     );

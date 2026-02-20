@@ -11,7 +11,6 @@ const Login = () => {
     const navigate = useNavigate(); 
 
     const login = async (email, password) => {
-        console.log("dfhvj")
         const res = await api.post("/user/login", { email, password });
         return res.data;
     };
@@ -27,8 +26,10 @@ const Login = () => {
 
             setError("");
             console.log({ email, password });
-            const { token } = await login(email, password);
-            localStorage.setItem("token", token);
+            const {result} = await login(email, password);
+            console.log(result)
+            localStorage.setItem("token", result.token);
+            localStorage.setItem("user", result.role);
             navigate("/home");
         } catch (err) {
             console.log("error",err,err.response?.data?.message)
