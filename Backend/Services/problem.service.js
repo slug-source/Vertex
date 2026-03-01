@@ -1,7 +1,7 @@
 import Problem from "../Models/problem.model.js";
 import { jsExecute, pyExecute, cppExecute, extractErrorLine, normalize } from "../utils/Compiler.js";
 import { generateFile, generateInputFile, deleteFile } from "../utils/GenerateFile.js";
-import { verdict } from "../utils/verdict.js";
+import { verdict } from "../utils/Verdict.js";
 
 const projectionByRole = {
     user: "-hiddencases -author",
@@ -74,7 +74,7 @@ export async function createProblem(title,problemstatement,constraints,author,vi
         throw new Error("DB Error");
     }
 
-    return "Problem added successfully"; //return id
+    return "Problem added successfully"; 
 }
 
 export async function runProblem(code, input, language) {

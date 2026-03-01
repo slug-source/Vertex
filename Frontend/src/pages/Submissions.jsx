@@ -5,8 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { getRole } from "../utils/auth";
 import { motion } from "framer-motion";
 
-const Home = () => {
-    const [problems, setProblems] = useState([]);
+const Submissions = () => {
+    const getVerdictStyles = (verdict) => {
+        if (verdict === "Accepted") {
+            return "bg-green-500/5 border-green-500/20 hover:bg-green-500/10";
+        }
+        return "bg-rose-500/5 border-rose-500/20 hover:bg-rose-500/10";
+    };
+    const [submissions, setSubmissions] = useState([]);
     const [error, setError] = useState("");
     const role = getRole();
 
@@ -14,16 +20,16 @@ const Home = () => {
 
     useEffect(() => {
 
-        const getProblems = async () => {
+        const getSubmissions = async () => {
             try {
-                const res = await api.get("/problem");
-                setProblems(res.data.result);
+                const res = await api.get("/submission");
+                setSubmissions(res.data.result);
             } catch (err) {
-                setError(err.response?.data?.message || "Error fetching problems");
+                setError(err.response?.data?.message || "Error fetching submissions");
             }
 
         };
-        getProblems();
+        getSubmissions();
     }, []);
 
     return (
@@ -41,24 +47,12 @@ const Home = () => {
                     <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-8">
                         <div>
                             <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">
-                                Problems
+                                Submissions
                             </h1>
                             <p className="text-gray-400 mt-2">
-                                Practice daily. Track progress. Get interview-ready.
+                                Track your progress.
                             </p>
                         </div>
-
-
-                        {role === "creator" && (
-                            <motion.button
-                                whileHover={{ scale: 1.03 }}
-                                whileTap={{ scale: 0.97 }}
-                                onClick={() => navigate(`/problem/create`)}
-                                className="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold shadow-lg"
-                            >
-                                + Add Problem
-                            </motion.button>
-                        )}
                     </div>
 
 
@@ -70,31 +64,19 @@ const Home = () => {
 
 
                     <div className="space-y-3">
-                        {problems.length === 0 ? (
+                        {submissions.length === 0 ? (
                             <div className="p-10 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 text-center">
-                                <p className="text-lg font-medium">No problems yet.</p>
-                                <p className="text-gray-400 mt-2">
-                                    {role === "creator"
-                                        ? "Create your first problem to get started."
-                                        : "Check back soon — new problems will appear here."}
-                                </p>
+                                <p className="text-lg font-medium">No submissions yet.</p>
                             </div>
                         ) : (
-                            problems.map((problem, index) => (
+                            submissions.map((submission, index) => (
                                 <motion.div
-                                    key={problem._id}
+                                    key={submission._id}
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.25, delay: index * 0.02 }}
                                     whileHover={{ scale: 1.01 }}
-                                    onClick={() =>
-                                        navigate(
-                                            role === "creator"
-                                                ? `/view/${problem._id}`
-                                                : `/solve/${problem._id}`
-                                        )
-                                    }
-                                    className="group cursor-pointer p-5 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 transition"
+                                    className={`group cursor-pointer p-5 rounded-2xl backdrop-blur-xl border transition${getVerdictStyles(submission.verdict)}`}
                                 >
                                     <div className="flex items-center justify-between gap-4">
                                         <div className="flex items-center gap-4">
@@ -104,18 +86,13 @@ const Home = () => {
 
                                             <div>
                                                 <h3 className="text-lg font-medium group-hover:text-indigo-300 transition">
-                                                    {problem.title}
+                                                    {submission.problemId}
                                                 </h3>
 
-                                                {/* Optional: show meta if you have it (difficulty/tags) */}
                                                 <p className="text-sm text-gray-400 mt-1">
-                                                    Click to {role === "creator" ? "view" : "solve"}
+                                                    {submission.verdict}
                                                 </p>
                                             </div>
-                                        </div>
-
-                                        <div className="text-gray-500 group-hover:text-gray-300 transition">
-                                            →
                                         </div>
                                     </div>
                                 </motion.div>
@@ -128,4 +105,4 @@ const Home = () => {
     );
 }
 
-export default Home;
+export default Submissions;

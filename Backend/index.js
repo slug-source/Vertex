@@ -14,7 +14,7 @@ app.listen(5000, () => {
 
 });
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "https://vertexcore.site"],
   credentials: true
 }));
 

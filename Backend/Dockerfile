@@ -1,11 +1,11 @@
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /app
-RUN apk update && apk add --no-cache g++
+RUN apk add --no-cache python3 py3-pip g++ make
 COPY package*.json ./
-RUN npm install --force
+RUN npm ci
 COPY . .
 
 CMD ["node", "index.js"]
 
-EXPOSE 3000
+EXPOSE 5000

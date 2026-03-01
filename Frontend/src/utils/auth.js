@@ -1,6 +1,8 @@
 export const getToken = () => localStorage.getItem("token");
+export const getRole = () => localStorage.getItem("user");
 
 export const logout = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    localStorage.removeItem("user");
+    window.location.href = "/";
 }

@@ -5,7 +5,7 @@ import { createSubmission } from "../Controllers/submission.controller.js";
 
 const router = Router();
 
-router.post('/run', auth(['user']), runProblem);
+router.post('/run', auth(['user','guest']), runProblem);
 router.post('/:id/submit', auth(['user']), submitProblem, createSubmission);
 router.post('/review', auth(['user']), codeReview);
 
@@ -13,7 +13,7 @@ router.post('/review', auth(['user']), codeReview);
 router.post('/', auth(['creator']), createProblem);
 router.delete('/:id', auth(['creator']), deleteProblem);
 
-router.get('/', auth(['user', 'creator']), getProblems);
-router.get('/:id', auth(['user', 'creator']), getProblemById);
+router.get('/', auth(['user', 'creator','guest']), getProblems);
+router.get('/:id', auth(['user', 'creator','guest']), getProblemById);
 
 export default router;

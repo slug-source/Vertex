@@ -45,13 +45,13 @@ export async function signup(name, email, password, role) {
         role
     });
     const token = jwt.sign({
-        id: newUser._id.toString(),
+        id: newUser._id,
         email: newUser.email,
         role: newUser.role
     },
         secret,
-        { expiresIn: "5m" }
+        { expiresIn: "7d" }
     );
-    return {token, role: user.role};
+    return {token, role: newUser.role};
 
 }
