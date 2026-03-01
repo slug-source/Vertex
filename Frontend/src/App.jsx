@@ -7,6 +7,7 @@ import Problem from './pages/Problem';
 import ProtectedRoute from './components/ProtectedRoute';
 import CreateProblem from './pages/CreateProblem';
 import SolveProblem from './pages/SolveProblem';
+import Submissions from './pages/Submissions';
 function App() {
 
   return (
@@ -16,11 +17,11 @@ function App() {
           <Route path='/' element={<Welcome />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
-
+          <Route path='/home' element={<Home />} />
+          <Route path='/solve/:id' element={<SolveProblem />} />
 
           <Route element={<ProtectedRoute />}>
-            <Route path='/home' element={<Home />} />
-            <Route path='/solve/:id' element={<SolveProblem />} />
+            <Route path='/submissions' element={<Submissions />} />
             <Route path='/view/:id' element={<Problem />} />
             <Route path='problem/create' element={<CreateProblem />} />
           </Route>

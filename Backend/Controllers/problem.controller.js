@@ -1,4 +1,5 @@
 import * as service from '../Services/problem.service.js';
+import {aiCodeReview} from '../utils/CodeReview.js';
 
 //user
 export async function runProblem(req, res, next){
@@ -67,9 +68,7 @@ export async function createProblem(req, res, next){
 
     try {
         const {title,problemstatement,constraints,visiblecases,hiddencases} = req.body
-        let visibleCasesArray = JSON.parse(visiblecases);
-        let hiddenCasesArray = JSON.parse(hiddencases);
-        const result = await service.createProblem(title,problemstatement,constraints,req.user.id,visibleCasesArray,hiddenCasesArray);
+        const result = await service.createProblem(title,problemstatement,constraints,req.user.id,visiblecases,hiddencases);
         return res.status(200).json({
             success: true,
             result
@@ -98,7 +97,7 @@ export async function deleteProblem(req, res, next){
 export async function codeReview(req, res, next){
     try {
         const {code, input} = req.body;
-        const result = await codeReview(code, input);
+        const result = await aiCodeReview(code, input);
         return res.status(200).json({
             success: true,
             result

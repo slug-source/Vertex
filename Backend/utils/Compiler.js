@@ -151,7 +151,8 @@ export const extractErrorLine = (raw) => {
       !line.match(/^[A-Z]:\\/i) &&
       !line.match(/[A-Z]:\\.*\.(js|py|cpp)/i) &&          
       !line.match(/^\/.*\.(js|py|cpp):/i) &&     
-      !line.startsWith("file:///")        
+      !line.startsWith("file:///") && 
+      !line.includes("/app/")   
     );
 };
 
